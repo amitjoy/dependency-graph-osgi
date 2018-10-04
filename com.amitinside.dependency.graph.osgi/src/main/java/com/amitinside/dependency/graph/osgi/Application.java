@@ -6,6 +6,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.resource.Capability;
@@ -24,17 +29,40 @@ public final class Application {
     private static final boolean SHOW_EDGE_LABEL = true;
 
     public static void main(final String... args) throws Exception {
-        final Application app = new Application();
-        final DependencyGraph dependencyGraph = new DependencyGraph("QIVICON");
+        final CommandLineParser parser = new DefaultParser();
+        final Options options = new Options();
 
-        final File file = IO.getFile("index.xml");
+        options.addOption("o", true, "OBR Index File Location").addOption("b", true, "Bundle List File Location");
+
+        String obrIndexFile = null;
+        String bundleListFile = null;
+        try {
+            final CommandLine line = parser.parse(options, args);
+            if (!line.hasOption("o")) {
+                throw new ParseException("OBR Index File must be used");
+            }
+            if (!line.hasOption("b")) {
+                throw new ParseException("Bundle List File must be used");
+            }
+            obrIndexFile = line.getOptionValue("o");
+            bundleListFile = line.getOptionValue("b");
+        } catch (final ParseException exp) {
+            System.err.println(exp.getMessage());
+            System.exit(-1);
+        }
+
+        final File file = IO.getFile(obrIndexFile);
         if (!file.exists()) {
             System.out.println("No OBR Index Found");
         }
-        final File bundlesFile = IO.getFile("bundles.txt");
+        final File bundlesFile = IO.getFile(bundleListFile);
         if (!bundlesFile.exists()) {
             System.out.println("No Bundle List Found");
         }
+
+        final Application app = new Application();
+        final DependencyGraph dependencyGraph = new DependencyGraph("QIVICON");
+
         final List<String> bundles = FileUtils.readLines(bundlesFile, "UTF-8");
         final ResourcesRepository repo = app.getRepository(file.toURI());
 
