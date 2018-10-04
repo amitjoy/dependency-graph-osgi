@@ -42,7 +42,8 @@ This project is licensed under EPL-1.0 [![License](http://img.shields.io/badge/l
 1. You need to create an OBR Index file using bnd - `bnd index */target/*.jar`
 2. This will create an OBR Index XML file in your project workspace directory
 3. Now create a `bundles.txt` file listing the bundles whose dependency graph will be prepared
-4. `java -jar dependency.graph.osgi-0.0.1-SNAPSHOT-jar-with-dependencies.jar -o index.xml -b bundles.txt`
+4. The `bundles.txt` file must comprise the bundle symbolic names in separate lines
+5. `java -jar dependency.graph.osgi-0.0.1-SNAPSHOT-jar-with-dependencies.jar -o index.xml -b bundles.txt`
 
 --------------------------------------------------------------------------------------------------------
 
