@@ -20,6 +20,7 @@ import org.graphstream.ui.view.Viewer;
 
 public final class DependencyGraph {
 
+    private static final int MAX_LENGTH_FOR_SHORTENING = 15;
     private final Graph graph;
 
     public DependencyGraph(final String name) {
@@ -60,14 +61,20 @@ public final class DependencyGraph {
         graph.removeNode(shortenBSN(bsn));
     }
 
-    public void addEdge(final String source, final String dependsOn, final String edgeLabel) {
+    public void addEdge(final String source, final String dependsOn, final String edgeLabel, final boolean showLabel) {
         final Edge edge = graph.addEdge(UUID.randomUUID().toString(), shortenBSN(source), shortenBSN(dependsOn), true);
         edge.addAttribute("ui.style", "shape: freeplane;");
-        edge.addAttribute("ui.label", edgeLabel);
+        if (showLabel) {
+            edge.addAttribute("ui.label", edgeLabel);
+        }
+    }
+
+    public void addEdge(final String source, final String dependsOn, final String edgeLabel) {
+        addEdge(source, dependsOn, edgeLabel, true);
     }
 
     public void addEdge(final String source, final String dependsOn) {
-        graph.addEdge(UUID.randomUUID().toString(), shortenBSN(source), shortenBSN(dependsOn), true);
+        addEdge(source, dependsOn, null, false);
     }
 
     public boolean hasNode(final String bsn) {
@@ -83,7 +90,7 @@ public final class DependencyGraph {
     }
 
     private String shortenBSN(final String bsn) {
-        if (bsn.length() > 15 && bsn.indexOf('.') != -1) {
+        if (bsn.length() > MAX_LENGTH_FOR_SHORTENING && bsn.indexOf('.') != -1) {
             final String[] parts = bsn.split("\\.");
             if (parts.length > 2) {
                 final StringBuilder builder = new StringBuilder();

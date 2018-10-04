@@ -69,10 +69,12 @@ public final class Application {
         final File file = IO.getFile(obrIndexFile);
         if (!file.exists()) {
             System.out.println("No OBR Index Found");
+            System.exit(-1);
         }
         final File bundlesFile = IO.getFile(bundleListFile);
         if (!bundlesFile.exists()) {
             System.out.println("No Bundle List Found");
+            System.exit(-1);
         }
 
         final Application app = new Application();
