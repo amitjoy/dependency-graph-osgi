@@ -58,3 +58,5 @@ This project is licensed under EPL-1.0 [![License](http://img.shields.io/badge/l
 
 <img width="1318" alt="bildschirmfoto 2018-10-04 um 20 39 13" src="https://user-images.githubusercontent.com/13380182/46495393-95ece980-c815-11e8-979a-38b62188056e.png">
 
+-------------------------------------------------------------------------------
+
