@@ -36,6 +36,7 @@ public final class DependencyGraph {
 
     public void addEdge(final String source, final String dependsOn, final String edgeLabel) {
         final Edge edge = graph.addEdge(UUID.randomUUID().toString(), shortenBSN(source), shortenBSN(dependsOn), true);
+        edge.addAttribute("ui.style", "shape: freeplane;");
         edge.addAttribute("ui.label", edgeLabel);
     }
 
