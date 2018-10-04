@@ -32,6 +32,9 @@ public final class Application {
             System.out.println("No OBR Index Found");
         }
         final File bundlesFile = IO.getFile("bundles.txt");
+        if (!bundlesFile.exists()) {
+            System.out.println("No Bundle List Found");
+        }
         final List<String> bundles = FileUtils.readLines(bundlesFile, "UTF-8");
         final ResourcesRepository repo = app.getRepository(file.toURI());
 
