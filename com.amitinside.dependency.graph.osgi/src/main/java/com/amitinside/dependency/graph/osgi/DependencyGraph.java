@@ -14,6 +14,7 @@ import java.util.UUID;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.Graphs;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.view.Viewer;
 
@@ -24,7 +25,7 @@ public final class DependencyGraph {
     public DependencyGraph(final String name) {
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
-        graph = new MultiGraph(name);
+        graph = Graphs.synchronizedGraph(new MultiGraph(name));
         final Viewer viewer = graph.display();
         viewer.enableAutoLayout();
 

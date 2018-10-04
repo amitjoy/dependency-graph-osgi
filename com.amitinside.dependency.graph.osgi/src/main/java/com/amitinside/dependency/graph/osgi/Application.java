@@ -89,6 +89,10 @@ public final class Application {
                                                        .findFirst()
                                                        .orElse(null);
                 //@formatter:on
+                if (resource == null) {
+                    System.out.println("Bundle with BSN [" + bundle + "] not found");
+                    continue;
+                }
                 final List<ResourceInfo> requiredResources = app.getResourcesRequiredBy(repo, resource);
                 app.prepareGraph(dependencyGraph, resource, requiredResources, showEdgeLabel);
             }
@@ -124,6 +128,9 @@ public final class Application {
 
     private void prepareGraph(final DependencyGraph dependencyGraph, final Resource resource,
             final List<ResourceInfo> requiredResources, final boolean showEdgeLabel) {
+        if (resource == null) {
+            return;
+        }
         final String bsn = getBSN(resource);
         if (!dependencyGraph.hasNode(bsn)) {
             dependencyGraph.addBaseNode(bsn);
