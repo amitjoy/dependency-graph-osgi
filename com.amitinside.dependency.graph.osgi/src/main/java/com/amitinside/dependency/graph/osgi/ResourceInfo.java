@@ -19,9 +19,7 @@ import org.osgi.resource.Resource;
 
 import com.google.common.collect.ComparisonChain;
 
-import aQute.bnd.util.dto.DTO;
-
-public class ResourceInfo extends DTO implements Comparable<ResourceInfo> {
+public final class ResourceInfo implements Comparable<ResourceInfo> {
 
     public Requirement requirement;
     public Set<Resource> requiredResources;

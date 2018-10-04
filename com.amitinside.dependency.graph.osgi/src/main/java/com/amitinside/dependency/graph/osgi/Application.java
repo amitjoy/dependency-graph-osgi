@@ -9,6 +9,8 @@
  *******************************************************************************/
 package com.amitinside.dependency.graph.osgi;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.File;
 import java.net.URI;
 import java.util.Collections;
@@ -35,13 +37,14 @@ import aQute.lib.io.IO;
 
 public final class Application {
 
-    private static final boolean SHOW_EDGE_LABEL = true;
-
     public static void main(final String... args) throws Exception {
+        boolean showEdgeLabel = false;
         final CommandLineParser parser = new DefaultParser();
         final Options options = new Options();
 
-        options.addOption("o", true, "OBR Index File Location").addOption("b", true, "Bundle List File Location");
+        options.addOption("o", true, "OBR Index File Location");
+        options.addOption("b", true, "Bundle List File Location");
+        options.addOption("e", false, "Show Edge Labels");
 
         String obrIndexFile = null;
         String bundleListFile = null;
@@ -52,6 +55,9 @@ public final class Application {
             }
             if (!line.hasOption("b")) {
                 throw new ParseException("Bundle List File must be used");
+            }
+            if (line.hasOption("e")) {
+                showEdgeLabel = true;
             }
             obrIndexFile = line.getOptionValue("o");
             bundleListFile = line.getOptionValue("b");
@@ -70,21 +76,23 @@ public final class Application {
         }
 
         final Application app = new Application();
-        final DependencyGraph dependencyGraph = new DependencyGraph("QIVICON");
+        final DependencyGraph dependencyGraph = new DependencyGraph("OSGi Dependency Graph");
 
-        final List<String> bundles = FileUtils.readLines(bundlesFile, "UTF-8");
+        final List<String> bundles = FileUtils.readLines(bundlesFile, UTF_8);
         final ResourcesRepository repo = app.getRepository(file.toURI());
 
-        bundles.stream().filter(b -> !b.trim().isEmpty()).forEach(b -> {
-            //@formatter:off
-            final Resource resource = repo.getResources().stream()
-                                                   .filter(r -> b.equals(app.getBSN(r)))
-                                                   .findFirst()
-                                                   .orElse(null);
-            //@formatter:on
-            final List<ResourceInfo> requiredResources = app.getResourcesRequiredBy(repo, resource);
-            app.prepareGraph(dependencyGraph, resource, requiredResources);
-        });
+        for (final String bundle : bundles) {
+            if (!bundle.trim().isEmpty()) {
+                //@formatter:off
+                final Resource resource = repo.getResources().stream()
+                                                       .filter(r -> bundle.equals(app.getBSN(r)))
+                                                       .findFirst()
+                                                       .orElse(null);
+                //@formatter:on
+                final List<ResourceInfo> requiredResources = app.getResourcesRequiredBy(repo, resource);
+                app.prepareGraph(dependencyGraph, resource, requiredResources, showEdgeLabel);
+            }
+        }
         dependencyGraph.display();
     }
 
@@ -115,10 +123,13 @@ public final class Application {
     }
 
     private void prepareGraph(final DependencyGraph dependencyGraph, final Resource resource,
-            final List<ResourceInfo> requiredResources) {
+            final List<ResourceInfo> requiredResources, final boolean showEdgeLabel) {
         final String bsn = getBSN(resource);
         if (!dependencyGraph.hasNode(bsn)) {
-            dependencyGraph.addNode(bsn);
+            dependencyGraph.addBaseNode(bsn);
+        } else {
+            dependencyGraph.removeNode(bsn);
+            dependencyGraph.addBaseNode(bsn);
         }
 
         // sorting is required since osgi.wiring.package has least priority. That is, if a bundle A uses a service
@@ -127,22 +138,20 @@ public final class Application {
         // requirement on the graph since it is a default requirement in this case
         Collections.sort(requiredResources);
 
-        requiredResources.forEach(r -> {
-            r.requiredResources.forEach(res -> {
-                final String rbsn = getBSN(res);
-                if (!dependencyGraph.hasNode(rbsn)) {
-                    dependencyGraph.addNode(rbsn);
+        requiredResources.forEach(r -> r.requiredResources.forEach(res -> {
+            final String rbsn = getBSN(res);
+            if (!dependencyGraph.hasNode(rbsn)) {
+                dependencyGraph.addNode(rbsn);
+            }
+            final String edgeLabel = StringUtils.substringAfterLast(r.requirement.getNamespace(), ".");
+            if (!dependencyGraph.hasEdgeBetween(bsn, rbsn)) {
+                if (showEdgeLabel) {
+                    dependencyGraph.addEdge(bsn, rbsn, edgeLabel);
+                } else {
+                    dependencyGraph.addEdge(bsn, rbsn);
                 }
-                final String edgeLabel = StringUtils.substringAfterLast(r.requirement.getNamespace(), ".");
-                if (!dependencyGraph.hasEdgeBetween(bsn, rbsn)) {
-                    if (SHOW_EDGE_LABEL) {
-                        dependencyGraph.addEdge(bsn, rbsn, edgeLabel);
-                    } else {
-                        dependencyGraph.addEdge(bsn, rbsn);
-                    }
-                }
-            });
-        });
+            }
+        }));
     }
 
 }

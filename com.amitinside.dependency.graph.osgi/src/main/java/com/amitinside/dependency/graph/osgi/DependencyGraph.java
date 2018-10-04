@@ -27,20 +27,36 @@ public final class DependencyGraph {
         graph = new MultiGraph(name);
         final Viewer viewer = graph.display();
         viewer.enableAutoLayout();
+
+        graph.addAttribute("ui.quality");
+    }
+
+    public void addBaseNode(final String bsn) {
+        addNode(bsn, true);
     }
 
     public void addNode(final String bsn) {
+        addNode(bsn, false);
+    }
+
+    public void addNode(final String bsn, final boolean isBase) {
         final String shortenedBSN = shortenBSN(bsn);
         final Node node = graph.addNode(shortenedBSN);
-        node.addAttribute("ui.style",
-                "text-alignment: under; text-color: white; text-style: bold; text-background-mode: rounded-box; text-background-color: #222C; text-padding: 5px, 4px; text-offset: 0px, 5px; ");
+        if (!isBase) {
+            node.addAttribute("ui.style",
+                    "text-alignment: under; text-color: white; text-style: bold; text-background-mode: rounded-box; text-background-color: #222C; text-padding: 5px, 4px; text-offset: 0px, 5px; ");
+        } else {
+            node.addAttribute("ui.style",
+                    "text-alignment: under; text-color: white; text-style: bold; text-background-mode: rounded-box; text-background-color: red; text-padding: 5px, 4px; text-offset: 0px, 5px; ");
+        }
+
         node.addAttribute("ui.label", shortenedBSN);
         node.addAttribute("ui.quality");
         node.addAttribute("ui.antialias");
     }
 
     public void removeNode(final String bsn) {
-        graph.removeNode(bsn);
+        graph.removeNode(shortenBSN(bsn));
     }
 
     public void addEdge(final String source, final String dependsOn, final String edgeLabel) {
