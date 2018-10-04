@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Resource;
@@ -20,26 +21,31 @@ import aQute.lib.io.IO;
 
 public final class Application {
 
-    private static final String QUERY = "com.qivicon.runtime.hal";
     private static final boolean SHOW_EDGE_LABEL = true;
 
     public static void main(final String... args) throws Exception {
         final Application app = new Application();
+        final DependencyGraph dependencyGraph = new DependencyGraph("QIVICON");
 
         final File file = IO.getFile("index.xml");
         if (!file.exists()) {
             System.out.println("No OBR Index Found");
         }
+        final File bundlesFile = IO.getFile("bundles.txt");
+        final List<String> bundles = FileUtils.readLines(bundlesFile, "UTF-8");
         final ResourcesRepository repo = app.getRepository(file.toURI());
 
-        //@formatter:off
-        final Resource resource = repo.getResources().stream()
-                                               .filter(r -> QUERY.equals(app.getBSN(r)))
-                                               .findFirst()
-                                               .orElse(null);
-        //@formatter:on
-        final List<ResourceInfo> requiredResources = app.getResourcesRequiredBy(repo, resource);
-        app.displayGraph(resource, requiredResources);
+        bundles.stream().filter(b -> !b.trim().isEmpty()).forEach(b -> {
+            //@formatter:off
+            final Resource resource = repo.getResources().stream()
+                                                   .filter(r -> b.equals(app.getBSN(r)))
+                                                   .findFirst()
+                                                   .orElse(null);
+            //@formatter:on
+            final List<ResourceInfo> requiredResources = app.getResourcesRequiredBy(repo, resource);
+            app.prepareGraph(dependencyGraph, resource, requiredResources);
+        });
+        dependencyGraph.display();
     }
 
     private ResourcesRepository getRepository(final URI uri) throws Exception {
@@ -68,10 +74,12 @@ public final class Application {
         return resources;
     }
 
-    private void displayGraph(final Resource resource, final List<ResourceInfo> requiredResources) {
+    private void prepareGraph(final DependencyGraph dependencyGraph, final Resource resource,
+            final List<ResourceInfo> requiredResources) {
         final String bsn = getBSN(resource);
-        final DependencyGraph dependencyGraph = new DependencyGraph(bsn);
-        dependencyGraph.addNode(bsn);
+        if (!dependencyGraph.hasNode(bsn)) {
+            dependencyGraph.addNode(bsn);
+        }
 
         // sorting is required since osgi.wiring.package has least priority. That is, if a bundle A uses a service
         // from another bundle B, A not only has osgi.service requirement to B, it also has osgi.wiring.package
@@ -95,7 +103,6 @@ public final class Application {
                 }
             });
         });
-        dependencyGraph.display();
     }
 
 }

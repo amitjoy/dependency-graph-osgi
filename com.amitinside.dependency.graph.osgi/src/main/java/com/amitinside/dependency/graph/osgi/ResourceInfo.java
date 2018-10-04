@@ -9,7 +9,6 @@ import org.osgi.resource.Requirement;
 import org.osgi.resource.Resource;
 
 import com.google.common.collect.ComparisonChain;
-import com.google.common.collect.Ordering;
 
 import aQute.bnd.util.dto.DTO;
 
@@ -20,9 +19,7 @@ public class ResourceInfo extends DTO implements Comparable<ResourceInfo> {
 
     @Override
     public int compareTo(final ResourceInfo o) {
-        final int result = ComparisonChain.start()
-                .compare(requirement.getNamespace(), o.requirement.getNamespace(), Ordering.natural()).result();
-        return (int) Math.signum(result);
+        return ComparisonChain.start().compare(requirement.getNamespace(), o.requirement.getNamespace()).result();
     }
 
     @Override

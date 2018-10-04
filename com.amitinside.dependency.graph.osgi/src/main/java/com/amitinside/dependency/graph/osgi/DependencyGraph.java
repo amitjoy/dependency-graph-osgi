@@ -2,7 +2,6 @@ package com.amitinside.dependency.graph.osgi;
 
 import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -24,8 +23,11 @@ public final class DependencyGraph {
     public void addNode(final String bsn) {
         final String shortenedBSN = shortenBSN(bsn);
         final Node node = graph.addNode(shortenedBSN);
-        node.addAttribute("ui.style", "shape:circle;fill-color: yellow;size: 30px; text-alignment: center;");
+        node.addAttribute("ui.style",
+                "text-alignment: under; text-color: white; text-style: bold; text-background-mode: rounded-box; text-background-color: #222C; text-padding: 5px, 4px; text-offset: 0px, 5px; ");
         node.addAttribute("ui.label", shortenedBSN);
+        node.addAttribute("ui.quality");
+        node.addAttribute("ui.antialias");
     }
 
     public void removeNode(final String bsn) {
@@ -54,7 +56,24 @@ public final class DependencyGraph {
     }
 
     private String shortenBSN(final String bsn) {
-        return StringUtils.replace(bsn, "com.qivicon", "c.q");
+        if (bsn.length() > 15 && bsn.indexOf('.') != -1) {
+            final String[] parts = bsn.split("\\.");
+            if (parts.length > 2) {
+                final StringBuilder builder = new StringBuilder();
+                builder.append(parts[0].charAt(0));
+                builder.append(".");
+                builder.append(parts[1].charAt(0));
+                builder.append(".");
+                for (int i = 2; i < parts.length; i++) {
+                    builder.append(parts[i]);
+                    if (i != parts.length - 1) {
+                        builder.append(".");
+                    }
+                }
+                return builder.toString();
+            }
+        }
+        return bsn;
     }
 
 }
