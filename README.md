@@ -19,13 +19,15 @@ Want to contribute? Great! Check out [Contribution Guide](https://github.com/ami
 
 **Import as Maven Project**
 
-Import the project as Existing Maven Projects (`File -> Import -> Maven -> Existing Maven Projects`)
+Import the project as Existing Maven Project (`File -> Import -> Maven -> Existing Maven Projects`)
 
 -------------------------------------------------------------------------------
 
 #### Building from Source
 
-Run `mvn clean install` in the project root directory
+1. Run `mvn clean package` in `com.amitinside.dependency.graph.osgi`
+2. This will build the project
+3. The target directory will contain `dependency.graph.osgi-0.0.1-SNAPSHOT-jar-with-dependencies.jar`
 
 -------------------------------------------------------------------------------
 
