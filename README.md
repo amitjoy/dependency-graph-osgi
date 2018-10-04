@@ -43,3 +43,10 @@ This project is licensed under EPL-1.0 [![License](http://img.shields.io/badge/l
 4. `java -jar dependency.graph.osgi-0.0.1-SNAPSHOT-jar-with-dependencies.jar -o index.xml -b bundles.txt`
 
 --------------------------------------------------------------------------------------------------------
+
+### Tools Used
+
+1. https://github.com/bndtools/bnd
+2. http://graphstream-project.org/
+
+--------------------------------------------------------------------------------------------------------
