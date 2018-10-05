@@ -44,8 +44,15 @@ This project is licensed under EPL-1.0 [![License](http://img.shields.io/badge/l
 3. The aforementioned command will create an OBR Index XML file in your project workspace directory
 4. Now create a `bundles.txt` file listing the bundles whose dependency graph will be prepared
 5. The `bundles.txt` file must comprise the bundle symbolic names in separate lines
-6. `java -jar dependency.graph.osgi-0.0.1-SNAPSHOT-jar-with-dependencies.jar -o index.xml -b bundles.txt -e`
-7. `-e` is used to show Dependency Graph edge labels
+
+```
+usage: help
+ -b <arg>   Bundle List File Location
+ -cycle     Check for Cycle Existence
+ -debug     Turn on Debug Mode
+ -e         Show Edge Labels
+ -o <arg>   OBR Index File Location
+```
 
 --------------------------------------------------------------------------------------------------------
 
