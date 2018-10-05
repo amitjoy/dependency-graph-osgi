@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
@@ -27,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Resource;
 
+import com.amitinside.dependency.graph.osgi.algo.CycleFinderAlgo;
 import com.google.common.collect.Lists;
 
 import aQute.bnd.osgi.repository.ResourcesRepository;
@@ -41,6 +43,7 @@ public final class Application {
 
         boolean showEdgeLabel = false;
         boolean debug = false;
+        boolean cycle = false;
 
         final CommandLineParser parser = new DefaultParser();
         final Options options = new Options();
@@ -49,16 +52,17 @@ public final class Application {
         options.addOption("b", true, "Bundle List File Location");
         options.addOption("e", false, "Show Edge Labels");
         options.addOption("debug", false, "Turn on Debug Mode");
+        options.addOption("cycle", false, "Check for Cycle Existence");
 
         String obrIndexFile = null;
         String bundleListFile = null;
         try {
             final CommandLine line = parser.parse(options, args);
             if (!line.hasOption("o")) {
-                throw new ParseException("OBR Index File must be used");
+                throw new ParseException("OBR Index File is missing");
             }
             if (!line.hasOption("b")) {
-                throw new ParseException("Bundle List File must be used");
+                throw new ParseException("Bundle List File is missing");
             }
             if (line.hasOption("e")) {
                 showEdgeLabel = true;
@@ -66,10 +70,15 @@ public final class Application {
             if (line.hasOption("debug")) {
                 debug = true;
             }
+            if (line.hasOption("cycle")) {
+                cycle = true;
+            }
             obrIndexFile = line.getOptionValue("o");
             bundleListFile = line.getOptionValue("b");
         } catch (final ParseException exp) {
             System.err.println(exp.getMessage());
+            final HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("help", options);
             System.exit(-1);
         }
 
@@ -113,6 +122,11 @@ public final class Application {
         if (dependencyGraph.isEmpty()) {
             System.out.println("No Element to plot on the Graph");
             System.exit(-1);
+        }
+        if (cycle) {
+            final CycleFinderAlgo cycleFinderAlgo = new CycleFinderAlgo(dependencyGraph, debug);
+            cycleFinderAlgo.compute();
+            System.err.println("Existence of Cycle => " + cycleFinderAlgo.hasCycle());
         }
         dependencyGraph.display();
     }
@@ -172,7 +186,7 @@ public final class Application {
                 dependencyGraph.addNode(rbsn);
             }
             final String edgeLabel = StringUtils.substringAfterLast(r.requirement.getNamespace(), ".");
-            if (!dependencyGraph.hasEdgeBetween(bsn, rbsn)) {
+            if (!dependencyGraph.hasEdgeBetween(bsn, rbsn) && !bsn.equalsIgnoreCase(rbsn)) {
                 if (showEdgeLabel) {
                     dependencyGraph.addEdge(bsn, rbsn, edgeLabel);
                 } else {

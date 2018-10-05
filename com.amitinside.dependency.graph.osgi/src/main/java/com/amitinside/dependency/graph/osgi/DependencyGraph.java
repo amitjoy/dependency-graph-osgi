@@ -97,6 +97,10 @@ public final class DependencyGraph {
         return graph.getNodeCount();
     }
 
+    public Graph internal() {
+        return graph;
+    }
+
     private String shortenBSN(final String bsn) {
         if (bsn.length() > MAX_LENGTH_FOR_SHORTENING && bsn.indexOf('.') != -1) {
             final String[] parts = bsn.split("\\.");
