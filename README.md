@@ -52,6 +52,7 @@ usage: help
  -debug     Turn on Debug Mode
  -e         Show Edge Labels
  -o <arg>   OBR Index File Location
+ -service   Plot only service dependencies
 ```
 
 --------------------------------------------------------------------------------------------------------
