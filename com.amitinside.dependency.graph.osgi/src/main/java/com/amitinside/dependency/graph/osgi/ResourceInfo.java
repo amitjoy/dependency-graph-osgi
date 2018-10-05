@@ -46,7 +46,8 @@ public final class ResourceInfo implements Comparable<ResourceInfo> {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("requirement", requirement.getNamespace()).toString();
+        return new ToStringBuilder(this).append("requirement", requirement)
+                .append("requiredResources", requiredResources).toString();
     }
 
 }

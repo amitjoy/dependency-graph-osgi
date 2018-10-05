@@ -38,13 +38,17 @@ import aQute.lib.io.IO;
 public final class Application {
 
     public static void main(final String... args) throws Exception {
+
         boolean showEdgeLabel = false;
+        boolean debug = false;
+
         final CommandLineParser parser = new DefaultParser();
         final Options options = new Options();
 
         options.addOption("o", true, "OBR Index File Location");
         options.addOption("b", true, "Bundle List File Location");
         options.addOption("e", false, "Show Edge Labels");
+        options.addOption("debug", false, "Turn on Debug Mode");
 
         String obrIndexFile = null;
         String bundleListFile = null;
@@ -58,6 +62,9 @@ public final class Application {
             }
             if (line.hasOption("e")) {
                 showEdgeLabel = true;
+            }
+            if (line.hasOption("debug")) {
+                debug = true;
             }
             obrIndexFile = line.getOptionValue("o");
             bundleListFile = line.getOptionValue("b");
@@ -83,10 +90,14 @@ public final class Application {
         final List<String> bundles = FileUtils.readLines(bundlesFile, UTF_8);
         final ResourcesRepository repo = app.getRepository(file.toURI());
 
+        // plot all base nodes
+        bundles.forEach(dependencyGraph::addBaseNode);
+
         for (final String bundle : bundles) {
             if (!bundle.trim().isEmpty()) {
                 //@formatter:off
-                final Resource resource = repo.getResources().stream()
+                final Resource resource = repo.getResources()
+                                                       .stream()
                                                        .filter(r -> bundle.equals(app.getBSN(r)))
                                                        .findFirst()
                                                        .orElse(null);
@@ -95,9 +106,13 @@ public final class Application {
                     System.out.println("Bundle with BSN [" + bundle + "] not found");
                     continue;
                 }
-                final List<ResourceInfo> requiredResources = app.getResourcesRequiredBy(repo, resource);
+                final List<ResourceInfo> requiredResources = app.getResourcesRequiredBy(repo, resource, debug);
                 app.prepareGraph(dependencyGraph, resource, requiredResources, showEdgeLabel);
             }
+        }
+        if (dependencyGraph.isEmpty()) {
+            System.out.println("No Element to plot on the Graph");
+            System.exit(-1);
         }
         dependencyGraph.display();
     }
@@ -112,14 +127,24 @@ public final class Application {
         return identity.getAttributes().get("osgi.identity").toString();
     }
 
-    private List<ResourceInfo> getResourcesRequiredBy(final ResourcesRepository repo, final Resource resource) {
+    private List<ResourceInfo> getResourcesRequiredBy(final ResourcesRepository repo, final Resource resource,
+            final boolean debug) {
+        if (debug) {
+            System.out.println("OSGi Resource to search => " + resource);
+        }
         if (resource == null) {
             return Collections.emptyList();
         }
         final List<ResourceInfo> resources = Lists.newArrayList();
         resource.getRequirements(null).forEach(r -> {
+            if (debug) {
+                System.out.println("Resource Requirement => " + r);
+            }
             final List<Capability> capabilities = repo.findProvider(r);
             final Set<Resource> requiredResources = ResourceUtils.getResources(capabilities);
+            if (debug) {
+                System.out.println("Resources providing the Requirement => " + requiredResources);
+            }
             final ResourceInfo rInfo = new ResourceInfo();
             rInfo.requirement = r;
             rInfo.requiredResources = requiredResources;
@@ -134,12 +159,6 @@ public final class Application {
             return;
         }
         final String bsn = getBSN(resource);
-        if (!dependencyGraph.hasNode(bsn)) {
-            dependencyGraph.addBaseNode(bsn);
-        } else {
-            dependencyGraph.removeNode(bsn);
-            dependencyGraph.addBaseNode(bsn);
-        }
 
         // sorting is required since osgi.wiring.package has least priority. That is, if a bundle A uses a service
         // from another bundle B, A not only has osgi.service requirement to B, it also has osgi.wiring.package
