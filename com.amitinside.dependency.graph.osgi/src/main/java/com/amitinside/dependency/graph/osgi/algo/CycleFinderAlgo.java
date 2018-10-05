@@ -35,10 +35,12 @@ public final class CycleFinderAlgo implements Algorithm {
     public void init(final Graph graph) {
         this.graph = graph;
         tscc = new TarjanStronglyConnectedComponents();
+        tscc.init(graph);
     }
 
     @Override
     public void compute() {
+        tscc.compute();
         final List<Integer> sccIndices = Lists.newArrayList();
         for (final Node n : graph.getEachNode()) {
             final Integer attribute = n.getAttribute(tscc.getSCCIndexAttribute(), Integer.class);
