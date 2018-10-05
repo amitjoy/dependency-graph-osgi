@@ -27,9 +27,6 @@ public final class DependencyGraph {
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
         graph = Graphs.synchronizedGraph(new MultiGraph(name));
-        final Viewer viewer = graph.display();
-        viewer.enableAutoLayout();
-
         graph.addAttribute("ui.quality");
     }
 
@@ -86,7 +83,8 @@ public final class DependencyGraph {
     }
 
     public void display() {
-        graph.display();
+        final Viewer viewer = graph.display();
+        viewer.enableAutoLayout();
     }
 
     public boolean isEmpty() {
