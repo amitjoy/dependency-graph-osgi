@@ -124,7 +124,8 @@ public final class Application {
             System.exit(-1);
         }
         if (cycle) {
-            final CycleFinderAlgo cycleFinderAlgo = new CycleFinderAlgo(dependencyGraph, debug);
+            final CycleFinderAlgo cycleFinderAlgo = new CycleFinderAlgo(debug);
+            cycleFinderAlgo.init(dependencyGraph.internal());
             cycleFinderAlgo.compute();
             System.err.println("Existence of Cycle => " + cycleFinderAlgo.hasCycle());
         }
