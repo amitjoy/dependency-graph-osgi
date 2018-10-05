@@ -9,13 +9,7 @@
  *******************************************************************************/
 package com.amitinside.dependency.graph.osgi;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.io.File;
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -23,27 +17,16 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.osgi.resource.Capability;
-import org.osgi.resource.Resource;
 
-import com.amitinside.dependency.graph.osgi.algo.CycleFinderAlgo;
-import com.google.common.collect.Lists;
-
-import aQute.bnd.osgi.repository.ResourcesRepository;
-import aQute.bnd.osgi.repository.XMLResourceParser;
-import aQute.bnd.osgi.resource.ResourceUtils;
-import aQute.bnd.osgi.resource.ResourceUtils.IdentityCapability;
 import aQute.lib.io.IO;
 
 public final class Application {
 
     public static void main(final String... args) throws Exception {
-
         boolean showEdgeLabel = false;
-        boolean debug = false;
         boolean cycle = false;
+        boolean debug = false;
+        boolean checkOnlyService = false;
 
         final CommandLineParser parser = new DefaultParser();
         final Options options = new Options();
@@ -53,6 +36,7 @@ public final class Application {
         options.addOption("e", false, "Show Edge Labels");
         options.addOption("debug", false, "Turn on Debug Mode");
         options.addOption("cycle", false, "Check for Cycle Existence");
+        options.addOption("service", false, "Plot only service dependencies");
 
         String obrIndexFile = null;
         String bundleListFile = null;
@@ -73,6 +57,9 @@ public final class Application {
             if (line.hasOption("cycle")) {
                 cycle = true;
             }
+            if (line.hasOption("service")) {
+                checkOnlyService = true;
+            }
             obrIndexFile = line.getOptionValue("o");
             bundleListFile = line.getOptionValue("b");
         } catch (final ParseException exp) {
@@ -82,119 +69,28 @@ public final class Application {
             System.exit(-1);
         }
 
-        final File file = IO.getFile(obrIndexFile);
-        if (!file.exists()) {
+        final File obrIndex = IO.getFile(obrIndexFile);
+        if (!obrIndex.exists()) {
             System.out.println("No OBR Index Found");
             System.exit(-1);
         }
+
         final File bundlesFile = IO.getFile(bundleListFile);
         if (!bundlesFile.exists()) {
             System.out.println("No Bundle List Found");
             System.exit(-1);
         }
 
-        final Application app = new Application();
-        final DependencyGraph dependencyGraph = new DependencyGraph("OSGi Dependency Graph");
+        final CliConfiguration config = new CliConfiguration();
+        config.isDebug = debug;
+        config.bundles = bundlesFile;
+        config.obrIndex = obrIndex;
+        config.checkCycle = cycle;
+        config.checkOnlyService = checkOnlyService;
+        config.showEdgeLabel = showEdgeLabel;
 
-        final List<String> bundles = FileUtils.readLines(bundlesFile, UTF_8);
-        final ResourcesRepository repo = app.getRepository(file.toURI());
-
-        // plot all base nodes
-        bundles.forEach(dependencyGraph::addBaseNode);
-
-        for (final String bundle : bundles) {
-            if (!bundle.trim().isEmpty()) {
-                //@formatter:off
-                final Resource resource = repo.getResources()
-                                                       .stream()
-                                                       .filter(r -> bundle.equals(app.getBSN(r)))
-                                                       .findFirst()
-                                                       .orElse(null);
-                //@formatter:on
-                if (resource == null) {
-                    System.out.println("Bundle with BSN [" + bundle + "] not found");
-                    continue;
-                }
-                final List<ResourceInfo> requiredResources = app.getResourcesRequiredBy(repo, resource, debug);
-                app.prepareGraph(dependencyGraph, resource, requiredResources, showEdgeLabel);
-            }
-        }
-        if (dependencyGraph.isEmpty()) {
-            System.out.println("No Element to plot on the Graph");
-            System.exit(-1);
-        }
-        if (cycle) {
-            final CycleFinderAlgo cycleFinderAlgo = new CycleFinderAlgo(debug);
-            cycleFinderAlgo.init(dependencyGraph.internal());
-            cycleFinderAlgo.compute();
-            System.err.println("Existence of Cycle => " + cycleFinderAlgo.hasCycle());
-        }
-        dependencyGraph.display();
-    }
-
-    private ResourcesRepository getRepository(final URI uri) throws Exception {
-        final List<Resource> resources = XMLResourceParser.getResources(uri);
-        return new ResourcesRepository(resources);
-    }
-
-    private String getBSN(final Resource resource) {
-        final IdentityCapability identity = ResourceUtils.getIdentityCapability(resource);
-        return identity.getAttributes().get("osgi.identity").toString();
-    }
-
-    private List<ResourceInfo> getResourcesRequiredBy(final ResourcesRepository repo, final Resource resource,
-            final boolean debug) {
-        if (debug) {
-            System.out.println("OSGi Resource to search => " + resource);
-        }
-        if (resource == null) {
-            return Collections.emptyList();
-        }
-        final List<ResourceInfo> resources = Lists.newArrayList();
-        resource.getRequirements(null).forEach(r -> {
-            if (debug) {
-                System.out.println("Resource Requirement => " + r);
-            }
-            final List<Capability> capabilities = repo.findProvider(r);
-            final Set<Resource> requiredResources = ResourceUtils.getResources(capabilities);
-            if (debug) {
-                System.out.println("Resources providing the Requirement => " + requiredResources);
-            }
-            final ResourceInfo rInfo = new ResourceInfo();
-            rInfo.requirement = r;
-            rInfo.requiredResources = requiredResources;
-            resources.add(rInfo);
-        });
-        return resources;
-    }
-
-    private void prepareGraph(final DependencyGraph dependencyGraph, final Resource resource,
-            final List<ResourceInfo> requiredResources, final boolean showEdgeLabel) {
-        if (resource == null) {
-            return;
-        }
-        final String bsn = getBSN(resource);
-
-        // sorting is required since osgi.wiring.package has least priority. That is, if a bundle A uses a service
-        // from another bundle B, A not only has osgi.service requirement to B, it also has osgi.wiring.package
-        // requirement to B. And if osgi.service is already found, we don't need to show the osgi.wiring.package
-        // requirement on the graph since it is a default requirement in this case
-        Collections.sort(requiredResources);
-
-        requiredResources.forEach(r -> r.requiredResources.forEach(res -> {
-            final String rbsn = getBSN(res);
-            if (!dependencyGraph.hasNode(rbsn)) {
-                dependencyGraph.addNode(rbsn);
-            }
-            final String edgeLabel = StringUtils.substringAfterLast(r.requirement.getNamespace(), ".");
-            if (!dependencyGraph.hasEdgeBetween(bsn, rbsn) && !bsn.equalsIgnoreCase(rbsn)) {
-                if (showEdgeLabel) {
-                    dependencyGraph.addEdge(bsn, rbsn, edgeLabel);
-                } else {
-                    dependencyGraph.addEdge(bsn, rbsn);
-                }
-            }
-        }));
+        final GraphConfigurer configurer = new GraphConfigurer(config);
+        configurer.init();
     }
 
 }
