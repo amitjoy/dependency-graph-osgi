@@ -46,8 +46,6 @@ public final class GraphConfigurer {
 
         if (cliConfiguration.isDebug) {
             logger.setLevel(Level.DEBUG);
-        } else {
-            logger.setLevel(Level.INFO);
         }
     }
 
