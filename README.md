@@ -22,7 +22,7 @@ Want to contribute? Great! Check out [Contribution Guide](https://github.com/ami
 Import the project as Existing Maven Project (`File -> Import -> Maven -> Existing Maven Projects`)
 
 -------------------------------------------------------------------------------
-dependencies
+
 #### Building from Source
 
 1. Run `mvn clean package` in `com.amitinside.dependency.graph.osgi`
@@ -33,7 +33,7 @@ dependencies
 
 ### License
 
-This project is licensed under EPL-1.0 [![License](http://img.shields.io/badge/license-EPL-blue.svg)](http://www.eclipse.org/legal/epl-v10.html)
+This project is licensed under EPL-2.0 [![License](http://img.shields.io/badge/license-EPL-blue.svg)](http://www.eclipse.org/legal/epl-2.0)
 
 ---------------------------------------------------------------------------------
 
