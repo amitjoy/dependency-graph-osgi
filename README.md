@@ -41,11 +41,25 @@ This project is licensed under EPL-2.0 [![License](http://img.shields.io/badge/l
 
 ### Usage
 
-1. You need to create an OBR Index file using bnd - `java -jar biz.aQute.bnd.jar index */target/*.jar`
-2. You can download bnd from this [link](https://goo.gl/xoYH7J)
-3. The aforementioned command will create an OBR Index XML file in your project workspace directory
-4. Now create a `bundles.txt` file listing the bundles whose dependency graph will be prepared
-5. The `bundles.txt` file must comprise the bundle symbolic names in separate lines. You can also use wildcards.
+To use this application, you need an OBR Index XML File.
+
+#### OBR Index Generation
+
+1. You need to download bnd from this [link](https://goo.gl/xoYH7J)
+2. Using terminal, switch to your workspace directory and execute - `java -jar biz.aQute.bnd.jar index */target/*.jar`
+3. This assumes that all the target artifacts are kept in `target` directory in respective projects
+4. Alternatively, you can copy all your project JARs inside a separate directory
+5. Switch to the new directory in command line and execute `java -jar biz.aQute.bnd.jar index *.jar`
+6. Both the aforementioned commands will generate an `index.xml`
+
+#### Create Bundles List
+
+1. You need to have a file comprising the bundle symbolic names of the bundles whose graph need to prepared
+2. You can create a `bundles.txt` file with bundle symbolic names in separate lines. You can also use wildcards. For example, `com.google.*` will consider all the dependencies whose bundle symbolic names start with `com.google`
+
+####
+
+Help Command: 
 
 ```
 usage: Dependency Graph in OSGi - Help
