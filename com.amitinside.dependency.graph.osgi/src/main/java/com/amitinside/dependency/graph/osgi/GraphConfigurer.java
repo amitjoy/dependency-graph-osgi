@@ -151,10 +151,14 @@ public final class GraphConfigurer {
     }
 
     private boolean checkNamespace(final ResourceInfo r) {
-        if (cliConfiguration.namespace == Namespace.ALL) {
-            return true;
+        switch (cliConfiguration.namespace) {
+            case ALL:
+                return true;
+            case CUSTOM:
+                return cliConfiguration.customNamespace.equals(r.requirement.getNamespace());
+            default:
+                return cliConfiguration.namespace.ns().equals(r.requirement.getNamespace());
         }
-        return cliConfiguration.namespace.ns().equals(r.requirement.getNamespace());
     }
 
     private Set<String> matchWildCards(final List<String> input, final ResourcesRepository repo) {

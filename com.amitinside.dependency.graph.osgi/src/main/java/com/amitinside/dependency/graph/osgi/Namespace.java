@@ -20,7 +20,8 @@ public enum Namespace {
     IMPLEMENTATION("osgi.implementation"),
     CONTRACT("osgi.contract"),
     BUNDLE("osgi.wiring.bundle"),
-    HOST("osgi.wiring.host");
+    HOST("osgi.wiring.host"),
+    CUSTOM("custom");
 
     String ns;
 

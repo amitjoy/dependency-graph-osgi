@@ -18,6 +18,7 @@ public final class CliConfiguration extends DTO {
     public File obrIndex;
     public File bundles;
     public Namespace namespace;
+    public String customNamespace;
     public boolean isDebug;
     public boolean checkCycle;
     public boolean showEdgeLabel;
