@@ -42,7 +42,7 @@ This project is licensed under EPL-2.0 [![License](http://img.shields.io/badge/l
 ### Usage
 
 1. You need to create an OBR Index file using bnd - `java -jar biz.aQute.bnd.jar index */target/*.jar`
-2. You can download bnd from [this URL](https://goo.gl/xoYH7J) - 
+2. You can download bnd from this [link](https://goo.gl/xoYH7J)
 3. The aforementioned command will create an OBR Index XML file in your project workspace directory
 4. Now create a `bundles.txt` file listing the bundles whose dependency graph will be prepared
 5. The `bundles.txt` file must comprise the bundle symbolic names in separate lines. You can also use wildcards.
