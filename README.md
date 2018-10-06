@@ -1,3 +1,5 @@
+<img width="303" alt="bildschirmfoto 2018-10-06 um 17 52 35" src="https://user-images.githubusercontent.com/13380182/46573106-a2498180-c990-11e8-8fc0-f1a09c8764c5.png">
+
 ## Why? [![start with what and why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)]()
 
 This is an easy to use tool to visualize OSGi Dependencies using a Graph. In addition, the tool also supports detection of cyclic dependencies in the plotted graph. 
