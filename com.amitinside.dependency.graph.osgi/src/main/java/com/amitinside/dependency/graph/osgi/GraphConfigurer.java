@@ -10,12 +10,14 @@
 package com.amitinside.dependency.graph.osgi;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.stream.Collectors.toSet;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +26,9 @@ import org.osgi.resource.Resource;
 import org.slf4j.LoggerFactory;
 
 import com.amitinside.dependency.graph.osgi.algo.CycleFinderAlgo;
+import com.amitinside.dependency.graph.osgi.util.Helper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import aQute.bnd.osgi.repository.ResourcesRepository;
 import aQute.bnd.osgi.repository.XMLResourceParser;
@@ -53,10 +57,12 @@ public final class GraphConfigurer {
         final List<String> bundles = FileUtils.readLines(cliConfiguration.bundles, UTF_8);
         final ResourcesRepository repo = getRepository(cliConfiguration.obrIndex.toURI());
 
-        // plot all base nodes
-        bundles.forEach(dependencyGraph::addBaseNode);
+        final Set<String> bundlesToPlot = matchWildCards(bundles, repo);
 
-        for (final String bundle : bundles) {
+        // plot all base nodes
+        bundlesToPlot.forEach(dependencyGraph::addBaseNode);
+
+        for (final String bundle : bundlesToPlot) {
             if (!bundle.trim().isEmpty()) {
                 //@formatter:off
                 final Resource resource = repo.getResources()
@@ -149,6 +155,24 @@ public final class GraphConfigurer {
             return true;
         }
         return cliConfiguration.namespace.ns().equals(r.requirement.getNamespace());
+    }
+
+    private Set<String> matchWildCards(final List<String> input, final ResourcesRepository repo) {
+        final Predicate<? super String> hasWildcard = e -> e.contains("*") || e.contains("?");
+        final Set<String> wildcardEntries = input.stream().filter(hasWildcard).collect(toSet());
+
+        final Set<String> bundles = Sets.newHashSet(input);
+        bundles.removeAll(wildcardEntries);
+
+        for (final String wildcardEntry : wildcardEntries) {
+            for (final Resource resource : repo.getResources()) {
+                final String bsn = getBSN(resource);
+                if (Helper.isMatch(bsn, wildcardEntry)) {
+                    bundles.add(bsn);
+                }
+            }
+        }
+        return bundles;
     }
 
 }
