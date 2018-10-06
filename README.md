@@ -1,6 +1,6 @@
 ## Why? [![start with what and why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)]()
 
-This is an easy to use tool to visualize OSGi Dependencies using a Graph. In addition, the tool also supports finding cyclic dependencies in the plotted graph. 
+This is an easy to use tool to visualize OSGi Dependencies using a Graph. In addition, the tool also supports detection of cyclic dependencies in the plotted graph. 
 
 ---------------------------------------------------------------------------------------------------------------
 
