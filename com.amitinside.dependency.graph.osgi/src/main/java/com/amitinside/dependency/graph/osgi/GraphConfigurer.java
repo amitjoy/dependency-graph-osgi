@@ -158,7 +158,7 @@ public final class GraphConfigurer {
     }
 
     private Set<String> matchWildCards(final List<String> input, final ResourcesRepository repo) {
-        final Predicate<? super String> hasWildcard = e -> e.contains("*") || e.contains("?");
+        final Predicate<? super String> hasWildcard = e -> e.endsWith("*") || e.endsWith("?");
         final Set<String> wildcardEntries = input.stream().filter(hasWildcard).collect(toSet());
 
         final Set<String> bundles = Sets.newHashSet(input);

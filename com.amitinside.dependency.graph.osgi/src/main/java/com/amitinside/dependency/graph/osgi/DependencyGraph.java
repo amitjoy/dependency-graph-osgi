@@ -94,7 +94,7 @@ public final class DependencyGraph {
         final ViewPanel panel = viewer.getDefaultView();
         viewer.enableAutoLayout();
         final JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-        topFrame.setTitle("Dependency Graph is OSGi");
+        topFrame.setTitle("Dependency Graph in OSGi");
         topFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         centreWindow(topFrame);
     }
@@ -132,7 +132,7 @@ public final class DependencyGraph {
         return bsn;
     }
 
-    public static void centreWindow(final Window frame) {
+    private void centreWindow(final Window frame) {
         final Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         final int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
         final int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);

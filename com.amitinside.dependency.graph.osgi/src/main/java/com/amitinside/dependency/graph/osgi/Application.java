@@ -26,7 +26,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 import aQute.lib.io.IO;
-import ch.qos.logback.classic.BasicConfigurator;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
@@ -35,7 +34,6 @@ public final class Application {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
     static {
-        BasicConfigurator.configureDefaultContext();
         logger.setLevel(Level.INFO);
     }
 
