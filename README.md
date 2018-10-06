@@ -2,7 +2,7 @@
 
 ## Why? [![start with what and why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)]()
 
-This is an easy to use tool to visualize OSGi Dependencies using a Graph. In addition, the tool also supports detection of cyclic dependencies in the plotted graph. 
+This is an easy to use tool to visualize OSGi Dependencies in a Graph. In addition, this tool also supports detection of cyclic dependencies in the plotted graph.
 
 ---------------------------------------------------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ Want to contribute? Great! Check out [Contribution Guide](https://github.com/ami
 
 **Import as Maven Project**
 
-Import the project as Existing Maven Project (`File -> Import -> Maven -> Existing Maven Projects`)
+Import the project as an `Existing Maven Project` (`File -> Import -> Maven -> Existing Maven Projects`)
 
 -------------------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ This project is licensed under EPL-2.0 [![License](http://img.shields.io/badge/l
 
 ### Usage
 
-To use this application, you need an OBR Index XML File.
+To use this application, you need an OBR (`OSGi Bundle Repository`) Index XML File.
 
 #### OBR Index Generation
 
@@ -49,13 +49,13 @@ To use this application, you need an OBR Index XML File.
 2. Using terminal, switch to your workspace directory and execute - `java -jar biz.aQute.bnd.jar index */target/*.jar`
 3. This assumes that all the target artifacts are kept in `target` directory in respective projects
 4. Alternatively, you can copy all your project JARs inside a separate directory
-5. Switch to the new directory in command line and execute `java -jar biz.aQute.bnd.jar index *.jar`
-6. Both the aforementioned commands will generate an `index.xml`
+5. Switch to this newly created directory in command line and execute `java -jar biz.aQute.bnd.jar index *.jar`
+6. Both the aforementioned commands will generate an OBR `index.xml`
 
 #### Create Bundles List
 
-1. You need to have a file comprising the bundle symbolic names of the bundles whose graph need to prepared
-2. You can create a `bundles.txt` file with bundle symbolic names in separate lines. You can also use wildcards. For example, `com.google.*` will consider all the dependencies whose bundle symbolic names start with `com.google`
+1. You need to have a file comprising the bundle symbolic names of the bundles whose dependencies will be plotted on the graph
+2. You can create a `bundles.txt` (or give it a name of your choice) with bundle symbolic names in separate lines. You can also use wildcards. For example, `com.google.*` will consider all the bundles whose symbolic names start with `com.google.`
 
 ####
 
@@ -75,16 +75,20 @@ usage: Dependency Graph in OSGi - Help
  -o <arg>    OBR Index File Location
 ```
 
+#### Example Usage
+
+`java -jar dependency.graph.osgi.jar -o index.xml -b bundles.txt -e`
+
 --------------------------------------------------------------------------------------------------------
 
 ### Tools Used
 
 1. https://github.com/bndtools/bnd
-2. http://graphstream-project.org/
+2. http://graphstream-project.org
 
 --------------------------------------------------------------------------------------------------------
 
 <img width="1422" alt="bildschirmfoto 2018-10-06 um 16 19 07" src="https://user-images.githubusercontent.com/13380182/46572293-a8853100-c983-11e8-8537-4b0a77426c19.png">
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 
