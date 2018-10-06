@@ -22,13 +22,13 @@ public enum Namespace {
     BUNDLE("osgi.wiring.bundle"),
     HOST("osgi.wiring.host");
 
-    String namespace;
+    String ns;
 
-    Namespace(final String namespace) {
-        this.namespace = namespace;
+    Namespace(final String ns) {
+        this.ns = ns;
     }
 
     public String ns() {
-        return namespace;
+        return ns;
     }
 }

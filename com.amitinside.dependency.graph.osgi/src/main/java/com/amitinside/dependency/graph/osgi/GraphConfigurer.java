@@ -10,6 +10,7 @@
 package com.amitinside.dependency.graph.osgi;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 import java.net.URI;
 import java.util.Collections;
@@ -20,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Resource;
+import org.slf4j.LoggerFactory;
 
 import com.amitinside.dependency.graph.osgi.algo.CycleFinderAlgo;
 import com.google.common.collect.Lists;
@@ -28,8 +30,12 @@ import aQute.bnd.osgi.repository.ResourcesRepository;
 import aQute.bnd.osgi.repository.XMLResourceParser;
 import aQute.bnd.osgi.resource.ResourceUtils;
 import aQute.bnd.osgi.resource.ResourceUtils.IdentityCapability;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 
 public final class GraphConfigurer {
+
+    private final Logger logger = (Logger) LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
     private final DependencyGraph dependencyGraph;
     private final CliConfiguration cliConfiguration;
@@ -37,6 +43,12 @@ public final class GraphConfigurer {
     public GraphConfigurer(final CliConfiguration cliConfiguration) {
         dependencyGraph = new DependencyGraph("OSGi Dependency Graph");
         this.cliConfiguration = cliConfiguration;
+
+        if (cliConfiguration.isDebug) {
+            logger.setLevel(Level.DEBUG);
+        } else {
+            logger.setLevel(Level.INFO);
+        }
     }
 
     public void init() throws Exception {
@@ -56,23 +68,22 @@ public final class GraphConfigurer {
                                               .orElse(null);
                 //@formatter:on
                 if (resource == null) {
-                    System.out.println("Bundle with BSN [" + bundle + "] not found");
+                    logger.info("Bundle with BSN [{}] not found", bundle);
                     continue;
                 }
-                final List<ResourceInfo> requiredResources = getResourcesRequiredBy(repo, resource,
-                        cliConfiguration.isDebug);
+                final List<ResourceInfo> requiredResources = getResourcesRequiredBy(repo, resource);
                 prepareGraph(dependencyGraph, resource, requiredResources, cliConfiguration.showEdgeLabel);
             }
         }
         if (dependencyGraph.isEmpty()) {
-            System.out.println("No Element to plot on the Graph");
+            logger.info("No Element to plot on the Graph");
             System.exit(-1);
         }
         if (cliConfiguration.checkCycle) {
             final CycleFinderAlgo cycleFinderAlgo = new CycleFinderAlgo(cliConfiguration.isDebug);
             cycleFinderAlgo.init(dependencyGraph.internal());
             cycleFinderAlgo.compute();
-            System.err.println("Existence of Cycle => " + cycleFinderAlgo.hasCycle());
+            logger.info("Existence of Cycle => {}", cycleFinderAlgo.hasCycle());
         }
         dependencyGraph.display();
     }
@@ -87,24 +98,17 @@ public final class GraphConfigurer {
         return identity.getAttributes().get("osgi.identity").toString();
     }
 
-    private List<ResourceInfo> getResourcesRequiredBy(final ResourcesRepository repo, final Resource resource,
-            final boolean debug) {
-        if (debug) {
-            System.out.println("OSGi Resource to search => " + resource);
-        }
+    private List<ResourceInfo> getResourcesRequiredBy(final ResourcesRepository repo, final Resource resource) {
+        logger.debug("OSGi Resource to search => {} ", resource);
         if (resource == null) {
             return Collections.emptyList();
         }
         final List<ResourceInfo> resources = Lists.newArrayList();
         resource.getRequirements(null).forEach(r -> {
-            if (debug) {
-                System.out.println("Resource Requirement => " + r);
-            }
+            logger.debug("Resource Requirement => {}", r);
             final List<Capability> capabilities = repo.findProvider(r);
             final Set<Resource> requiredResources = ResourceUtils.getResources(capabilities);
-            if (debug) {
-                System.out.println("Resources providing the Requirement => " + requiredResources);
-            }
+            logger.debug("Resources providing the Requirement => {}", requiredResources);
             final ResourceInfo rInfo = new ResourceInfo();
             rInfo.requirement = r;
             rInfo.requiredResources = requiredResources;
