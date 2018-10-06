@@ -18,6 +18,10 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import com.google.common.base.Enums;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+
 import aQute.lib.io.IO;
 
 public final class Application {
@@ -26,7 +30,7 @@ public final class Application {
         boolean showEdgeLabel = false;
         boolean cycle = false;
         boolean debug = false;
-        boolean checkOnlyService = false;
+        Namespace namespace = Namespace.ALL;
 
         final CommandLineParser parser = new DefaultParser();
         final Options options = new Options();
@@ -36,7 +40,9 @@ public final class Application {
         options.addOption("e", false, "Show Edge Labels");
         options.addOption("debug", false, "Turn on Debug Mode");
         options.addOption("cycle", false, "Check for Cycle Existence");
-        options.addOption("service", false, "Plot only service dependencies");
+        final String description = "Namespace Type to Plot (" + Lists.newArrayList(Namespace.values())
+                + ") (Default ALL)";
+        options.addOption("ns", true, description);
 
         String obrIndexFile = null;
         String bundleListFile = null;
@@ -57,8 +63,9 @@ public final class Application {
             if (line.hasOption("cycle")) {
                 cycle = true;
             }
-            if (line.hasOption("service")) {
-                checkOnlyService = true;
+            if (line.hasOption("ns")) {
+                final Optional<Namespace> optType = Enums.getIfPresent(Namespace.class, line.getOptionValue("ns"));
+                namespace = optType.or(Namespace.ALL);
             }
             obrIndexFile = line.getOptionValue("o");
             bundleListFile = line.getOptionValue("b");
@@ -86,8 +93,12 @@ public final class Application {
         config.bundles = bundlesFile;
         config.obrIndex = obrIndex;
         config.checkCycle = cycle;
-        config.checkOnlyService = checkOnlyService;
+        config.namespace = namespace;
         config.showEdgeLabel = showEdgeLabel;
+
+        if (debug) {
+            System.out.println("Cli Configuration => " + config);
+        }
 
         final GraphConfigurer configurer = new GraphConfigurer(config);
         configurer.init();

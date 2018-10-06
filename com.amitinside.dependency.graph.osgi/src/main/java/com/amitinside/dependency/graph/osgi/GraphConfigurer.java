@@ -126,7 +126,7 @@ public final class GraphConfigurer {
         // requirement on the graph since it is a default requirement in this case
         Collections.sort(requiredResources);
 
-        requiredResources.stream().filter(this::checkRequirement).forEach(r -> r.requiredResources.forEach(res -> {
+        requiredResources.stream().filter(this::checkNamespace).forEach(r -> r.requiredResources.forEach(res -> {
             final String rbsn = getBSN(res);
             if (!dependencyGraph.hasNode(rbsn)) {
                 dependencyGraph.addNode(rbsn);
@@ -142,11 +142,11 @@ public final class GraphConfigurer {
         }));
     }
 
-    private boolean checkRequirement(final ResourceInfo r) {
-        if (!cliConfiguration.checkOnlyService) {
+    private boolean checkNamespace(final ResourceInfo r) {
+        if (cliConfiguration.namespace == Namespace.ALL) {
             return true;
         }
-        return r.requirement.getNamespace().equals("osgi.service");
+        return cliConfiguration.namespace.ns().equals(r.requirement.getNamespace());
     }
 
 }
