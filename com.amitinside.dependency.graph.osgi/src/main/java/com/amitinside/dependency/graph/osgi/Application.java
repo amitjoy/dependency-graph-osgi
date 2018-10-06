@@ -101,7 +101,7 @@ public final class Application {
                 namespace = optType.get();
                 if (namespace == CUSTOM) {
                     if (!line.hasOption(NAMESPACE_CUSTOM)) {
-                        throw new ParseException("ns-custom option must be set if ns is set to CUSTOM");
+                        throw new ParseException("ns_custom option must be set if ns is set to CUSTOM");
                     }
                     customNamespace = line.getOptionValue(NAMESPACE_CUSTOM);
                 }
