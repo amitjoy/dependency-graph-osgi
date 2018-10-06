@@ -1,6 +1,6 @@
 ## Why? [![start with what and why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)]()
 
-This is an easy to use tool to visualize OSGi Dependencies in a graph view. 
+This is an easy to use tool to visualize OSGi Dependencies using a Graph. In addition, the tool also supports finding cyclic dependencies in the plotted graph. 
 
 ---------------------------------------------------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ Want to contribute? Great! Check out [Contribution Guide](https://github.com/ami
 Import the project as Existing Maven Project (`File -> Import -> Maven -> Existing Maven Projects`)
 
 -------------------------------------------------------------------------------
-
+dependencies
 #### Building from Source
 
 1. Run `mvn clean package` in `com.amitinside.dependency.graph.osgi`
@@ -47,12 +47,14 @@ This project is licensed under EPL-1.0 [![License](http://img.shields.io/badge/l
 
 ```
 usage: help
- -b <arg>   Bundle List File Location
- -cycle     Check for Cycle Existence
- -debug     Turn on Debug Mode
- -e         Show Edge Labels
- -o <arg>   OBR Index File Location
- -service   Plot only service dependencies
+ -b <arg>    Bundle List File Location
+ -cycle      Check for Cycle Existence
+ -debug      Turn on Debug Mode
+ -e          Show Edge Labels
+ -ns <arg>   Namespace Type to Plot ([ALL, PACKAGE, SERVICE, IDENTITY, EE,
+             NATIVE, CONTENT, IMPLEMENTATION, CONTRACT, BUNDLE, HOST])
+             (Default ALL)
+ -o <arg>    OBR Index File Location
 ```
 
 --------------------------------------------------------------------------------------------------------
