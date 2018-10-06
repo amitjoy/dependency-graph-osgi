@@ -9,13 +9,20 @@
  *******************************************************************************/
 package com.amitinside.dependency.graph.osgi;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.util.UUID;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.Graphs;
 import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 
 public final class DependencyGraph {
@@ -84,7 +91,12 @@ public final class DependencyGraph {
 
     public void display() {
         final Viewer viewer = graph.display();
+        final ViewPanel panel = viewer.getDefaultView();
         viewer.enableAutoLayout();
+        final JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+        topFrame.setTitle("Dependency Graph is OSGi");
+        topFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        centreWindow(topFrame);
     }
 
     public boolean isEmpty() {
@@ -118,6 +130,13 @@ public final class DependencyGraph {
             }
         }
         return bsn;
+    }
+
+    public static void centreWindow(final Window frame) {
+        final Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        final int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        final int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
     }
 
 }
