@@ -46,13 +46,15 @@ This project is licensed under EPL-2.0 [![License](http://img.shields.io/badge/l
 5. The `bundles.txt` file must comprise the bundle symbolic names in separate lines
 
 ```
-usage: help
+usage: Dependency Graph in OSGi - Help
+ -?          Show Help
  -b <arg>    Bundle List File Location
  -cycle      Check for Cycle Existence
  -debug      Turn on Debug Mode
  -e          Show Edge Labels
- -ns <arg>   Namespace Type to Plot ([ALL, PACKAGE, SERVICE, IDENTITY, EE,
-             NATIVE, CONTENT, IMPLEMENTATION, CONTRACT, BUNDLE, HOST])
+ -help       Show Help
+ -ns <arg>   Namespace Type to Plot [ALL, PACKAGE, SERVICE, IDENTITY, EE,
+             NATIVE, CONTENT, IMPLEMENTATION, CONTRACT, BUNDLE, HOST]
              (Default ALL)
  -o <arg>    OBR Index File Location
 ```
