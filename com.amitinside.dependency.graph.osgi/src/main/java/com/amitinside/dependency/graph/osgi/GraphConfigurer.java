@@ -58,8 +58,16 @@ public final class GraphConfigurer {
         final List<String> bundles = FileUtils.readLines(cliConfiguration.bundles, UTF_8);
         final ResourcesRepository repo = getRepository(cliConfiguration.obrIndex.toURI());
 
+        if (repo == null) {
+            logger.info("Invalid OBR XML");
+            return;
+        }
         final Set<String> bundlesToPlot = matchWildCards(bundles, repo);
 
+        if (bundlesToPlot.isEmpty()) {
+            logger.info("No Element to plot on the Graph");
+            return;
+        }
         // plot all base nodes
         bundlesToPlot.forEach(dependencyGraph::addBaseNode);
 
@@ -82,7 +90,7 @@ public final class GraphConfigurer {
         }
         if (dependencyGraph.isEmpty()) {
             logger.info("No Element to plot on the Graph");
-            System.exit(-1);
+            return;
         }
         if (cliConfiguration.checkCycle) {
             final CycleDetection cycleFinderAlgo = new CycleDetection(cliConfiguration.isDebug);
@@ -94,10 +102,11 @@ public final class GraphConfigurer {
     }
 
     private ResourcesRepository getRepository(final URI uri) throws Exception {
-        final List<Resource> resources = XMLResourceParser.getResources(uri);
-        if (resources == null) {
-            logger.info("Invalid OBR Index XML");
-            return new ResourcesRepository(Collections.emptyList());
+        List<Resource> resources = null;
+        try {
+            resources = XMLResourceParser.getResources(uri);
+        } catch (final Exception e) {
+            return null;
         }
         return new ResourcesRepository(resources);
     }
