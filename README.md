@@ -2,7 +2,7 @@
 
 ## Why? [![start with what and why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)]()
 
-This is an easy to use tool to visualize OSGi Dependencies in a Graph. In addition, this tool also supports detection of cyclic dependencies in the plotted graph.
+This is an easy to use tool to visualize OSGi Dependencies in a Graph. In addition, this tool also supports detection of cyclic dependencies in the plotted graph. The primary goal is to minimize the effort in analyzing big software projects based on OSGi. 
 
 ---------------------------------------------------------------------------------------------------------------
 
