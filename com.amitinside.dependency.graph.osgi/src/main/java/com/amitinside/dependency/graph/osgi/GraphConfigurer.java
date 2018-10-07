@@ -25,7 +25,7 @@ import org.osgi.resource.Capability;
 import org.osgi.resource.Resource;
 import org.slf4j.LoggerFactory;
 
-import com.amitinside.dependency.graph.osgi.algo.CycleFinderAlgo;
+import com.amitinside.dependency.graph.osgi.algo.CycleDetection;
 import com.amitinside.dependency.graph.osgi.cli.CliConfiguration;
 import com.amitinside.dependency.graph.osgi.util.Helper;
 import com.google.common.collect.Lists;
@@ -85,7 +85,7 @@ public final class GraphConfigurer {
             System.exit(-1);
         }
         if (cliConfiguration.checkCycle) {
-            final CycleFinderAlgo cycleFinderAlgo = new CycleFinderAlgo(cliConfiguration.isDebug);
+            final CycleDetection cycleFinderAlgo = new CycleDetection(cliConfiguration.isDebug);
             cycleFinderAlgo.init(dependencyGraph.internal());
             cycleFinderAlgo.compute();
             logger.info("Existence of Cycle => {}", cycleFinderAlgo.hasCycle());
@@ -95,6 +95,10 @@ public final class GraphConfigurer {
 
     private ResourcesRepository getRepository(final URI uri) throws Exception {
         final List<Resource> resources = XMLResourceParser.getResources(uri);
+        if (resources == null) {
+            logger.info("Invalid OBR Index XML");
+            return new ResourcesRepository(Collections.emptyList());
+        }
         return new ResourcesRepository(resources);
     }
 

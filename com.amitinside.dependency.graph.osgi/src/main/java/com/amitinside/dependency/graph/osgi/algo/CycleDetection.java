@@ -20,14 +20,14 @@ import org.graphstream.graph.Node;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public final class CycleFinderAlgo implements Algorithm {
+public final class CycleDetection implements Algorithm {
 
     private final boolean debug;
     private Graph graph;
     private TarjanStronglyConnectedComponents tscc;
     private boolean hasCycle;
 
-    public CycleFinderAlgo(final boolean debug) {
+    public CycleDetection(final boolean debug) {
         this.debug = debug;
     }
 
