@@ -15,6 +15,7 @@ import static com.amitinside.dependency.graph.osgi.cli.CliOptions.BUNDLE_FILE;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.CYCLE;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.HELP_1;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.HELP_2;
+import static com.amitinside.dependency.graph.osgi.cli.CliOptions.HELP_3;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.IS_DEBUG;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.NAMESPACE;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.NAMESPACE_CUSTOM;
@@ -60,23 +61,13 @@ public final class Application {
         final CommandLineParser parser = new DefaultParser();
         final Options options = new Options();
 
-        options.addOption(HELP_1, false, "Show Help");
-        options.addOption(HELP_2, false, "Show Help");
-        options.addOption(OBR_FILE, true, "OBR Index File Location");
-        options.addOption(BUNDLE_FILE, true, "Bundle List File Location");
-        options.addOption(SHOW_EDGE, false, "Show Edge Labels");
-        options.addOption(IS_DEBUG, false, "Turn on Debug Mode");
-        options.addOption(CYCLE, false, "Check for Cycle Existence");
-        final String description = "Namespace Type to Plot " + Lists.newArrayList(Namespace.values())
-                + " (Default ALL)";
-        options.addOption(NAMESPACE, true, description);
-        options.addOption(NAMESPACE_CUSTOM, true, "Custom Namespace (Needs to be set if ns option is set to CUSTOM");
+        addOptions(options);
 
         String obrIndexFile = null;
         String bundleListFile = null;
         try {
             final CommandLine line = parser.parse(options, args);
-            if (line.hasOption(HELP_2) || line.hasOption(HELP_1)) {
+            if (line.hasOption(HELP_2) || line.hasOption(HELP_1) || line.hasOption(HELP_3)) {
                 printHelp(options);
                 return;
             }
@@ -103,7 +94,7 @@ public final class Application {
                 namespace = optType.get();
                 if (namespace == CUSTOM) {
                     if (!line.hasOption(NAMESPACE_CUSTOM)) {
-                        throw new ParseException("ns_custom option must be set if ns is set to CUSTOM");
+                        throw new ParseException("Custom namespace option must be set if ns is set to CUSTOM");
                     }
                     customNamespace = line.getOptionValue(NAMESPACE_CUSTOM);
                 }
@@ -145,6 +136,20 @@ public final class Application {
 
         final GraphConfigurer configurer = new GraphConfigurer(config);
         configurer.init();
+    }
+
+    private static void addOptions(final Options options) {
+        options.addOption(HELP_1, false, "Show Help");
+        options.addOption(HELP_2, false, "Show Help");
+        options.addOption(OBR_FILE, true, "OBR Index File Location");
+        options.addOption(BUNDLE_FILE, true, "Bundle List File Location");
+        options.addOption(SHOW_EDGE, false, "Show Edge Labels");
+        options.addOption(IS_DEBUG, false, "Turn on Debug Mode");
+        options.addOption(CYCLE, false, "Check for Cycle Existence");
+        final String description = "Namespace Type to Plot " + Lists.newArrayList(Namespace.values())
+                + " (Default ALL)";
+        options.addOption(NAMESPACE, true, description);
+        options.addOption(NAMESPACE_CUSTOM, true, "Custom Namespace (Needs to be set if ns option is set to CUSTOM");
     }
 
     private static void printHelp(final Options options) {
