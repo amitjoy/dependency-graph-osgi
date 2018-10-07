@@ -64,22 +64,22 @@ Help Command:
 ```
 usage: Dependency Graph in OSGi - Help
  -?                 Show Help
- -b <arg>           Bundle List File Location
+ -bundles <arg>     Bundle List File Location
  -cycle             Check for Cycle Existence
  -debug             Turn on Debug Mode
- -e                 Show Edge Labels
+ -edge              Show Edge Labels
  -help              Show Help
  -ns <arg>          Namespace Type to Plot [ALL, PACKAGE, SERVICE,
                     IDENTITY, EE, NATIVE, CONTENT, IMPLEMENTATION,
                     CONTRACT, BUNDLE, HOST, CUSTOM] (Default ALL)
  -ns_custom <arg>   Custom Namespace (Needs to be set if ns option is set
                     to CUSTOM
- -o <arg>           OBR Index File Location
+ -obr <arg>         OBR Index File Location
 ```
 
 #### Example Usage
 
-`java -jar dependency.graph.osgi.jar -o index.xml -b bundles.txt -e`
+`java -jar dependency.graph.osgi.jar -obr index.xml -bundles bundles.txt -edge`
 
 --------------------------------------------------------------------------------------------------------
 
