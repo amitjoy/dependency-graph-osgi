@@ -85,7 +85,7 @@ usage: Dependency Graph in OSGi - Help
 
 ### Tools Used
 
-1. https://github.com/bndtools/bnd
+1. https://bnd.bndtools.org
 2. http://graphstream-project.org
 
 --------------------------------------------------------------------------------------------------------
