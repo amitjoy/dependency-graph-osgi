@@ -176,17 +176,31 @@ public final class GraphConfigurer {
     }
 
     private Set<String> matchWildCards(final List<String> input, final ResourcesRepository repo) {
-        final Predicate<? super String> hasWildcard = e -> e.endsWith("*") || e.endsWith("?");
-        final Set<String> wildcardEntries = input.stream().filter(hasWildcard).collect(toSet());
+        final Predicate<? super String> hasWildcardInclusion = e -> (e.endsWith("*") || e.endsWith("?"))
+                && !e.startsWith("!");
+        final Predicate<? super String> hasExclusion = e -> e.startsWith("!");
+
+        final Set<String> wildcardEntriesInclusion = input.stream().filter(hasWildcardInclusion).collect(toSet());
+        final Set<String> entriesExclusion = input.stream().filter(hasExclusion).collect(toSet());
 
         final Set<String> bundles = Sets.newHashSet(input);
-        bundles.removeAll(wildcardEntries);
+        bundles.removeAll(wildcardEntriesInclusion);
+        bundles.removeAll(entriesExclusion);
 
-        for (final String wildcardEntry : wildcardEntries) {
+        for (final String wildcardEntry : wildcardEntriesInclusion) {
             for (final Resource resource : repo.getResources()) {
                 final String bsn = getBSN(resource);
                 if (Helper.isMatch(bsn, wildcardEntry)) {
                     bundles.add(bsn);
+                }
+            }
+        }
+        for (final String wildcardEntry : entriesExclusion) {
+            final String entry = wildcardEntry.substring(1, wildcardEntry.length());
+            for (final Resource resource : repo.getResources()) {
+                final String bsn = getBSN(resource);
+                if (Helper.isMatch(bsn, entry)) {
+                    bundles.remove(bsn);
                 }
             }
         }
