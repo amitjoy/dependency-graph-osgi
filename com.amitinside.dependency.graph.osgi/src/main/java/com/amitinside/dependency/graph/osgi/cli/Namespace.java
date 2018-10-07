@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-2.0
  *
  *******************************************************************************/
-package com.amitinside.dependency.graph.osgi;
+package com.amitinside.dependency.graph.osgi.cli;
 
 public enum Namespace {
     ALL("ALL"),
@@ -21,7 +21,7 @@ public enum Namespace {
     CONTRACT("osgi.contract"),
     BUNDLE("osgi.wiring.bundle"),
     HOST("osgi.wiring.host"),
-    CUSTOM("custom");
+    CUSTOM("CUSTOM");
 
     String ns;
 

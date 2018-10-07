@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-2.0
  *
  *******************************************************************************/
-package com.amitinside.dependency.graph.osgi;
+package com.amitinside.dependency.graph.osgi.cli;
 
 public final class CliOptions {
 
@@ -20,7 +20,7 @@ public final class CliOptions {
     public static final String OBR_FILE = "o";
     public static final String BUNDLE_FILE = "b";
     public static final String SHOW_EDGE = "e";
-    public static final String DEBUG = "debug";
+    public static final String IS_DEBUG = "debug";
     public static final String CYCLE = "cycle";
     public static final String NAMESPACE = "ns";
     public static final String NAMESPACE_CUSTOM = "ns_custom";

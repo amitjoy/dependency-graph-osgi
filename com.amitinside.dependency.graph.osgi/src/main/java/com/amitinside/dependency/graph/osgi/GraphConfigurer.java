@@ -26,6 +26,7 @@ import org.osgi.resource.Resource;
 import org.slf4j.LoggerFactory;
 
 import com.amitinside.dependency.graph.osgi.algo.CycleFinderAlgo;
+import com.amitinside.dependency.graph.osgi.cli.CliConfiguration;
 import com.amitinside.dependency.graph.osgi.util.Helper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

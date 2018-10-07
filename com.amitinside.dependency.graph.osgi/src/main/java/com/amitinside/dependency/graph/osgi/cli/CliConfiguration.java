@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-2.0
  *
  *******************************************************************************/
-package com.amitinside.dependency.graph.osgi;
+package com.amitinside.dependency.graph.osgi.cli;
 
 import java.io.File;
 

@@ -7,19 +7,21 @@
  * http://www.eclipse.org/legal/epl-2.0
  *
  *******************************************************************************/
-package com.amitinside.dependency.graph.osgi;
+package com.amitinside.dependency.graph.osgi.cli;
 
-import static com.amitinside.dependency.graph.osgi.CliOptions.BUNDLE_FILE;
-import static com.amitinside.dependency.graph.osgi.CliOptions.CYCLE;
-import static com.amitinside.dependency.graph.osgi.CliOptions.DEBUG;
-import static com.amitinside.dependency.graph.osgi.CliOptions.HELP_1;
-import static com.amitinside.dependency.graph.osgi.CliOptions.HELP_2;
-import static com.amitinside.dependency.graph.osgi.CliOptions.NAMESPACE;
-import static com.amitinside.dependency.graph.osgi.CliOptions.NAMESPACE_CUSTOM;
-import static com.amitinside.dependency.graph.osgi.CliOptions.OBR_FILE;
-import static com.amitinside.dependency.graph.osgi.CliOptions.SHOW_EDGE;
-import static com.amitinside.dependency.graph.osgi.Namespace.ALL;
-import static com.amitinside.dependency.graph.osgi.Namespace.CUSTOM;
+import static ch.qos.logback.classic.Level.DEBUG;
+import static ch.qos.logback.classic.Level.INFO;
+import static com.amitinside.dependency.graph.osgi.cli.CliOptions.BUNDLE_FILE;
+import static com.amitinside.dependency.graph.osgi.cli.CliOptions.CYCLE;
+import static com.amitinside.dependency.graph.osgi.cli.CliOptions.HELP_1;
+import static com.amitinside.dependency.graph.osgi.cli.CliOptions.HELP_2;
+import static com.amitinside.dependency.graph.osgi.cli.CliOptions.IS_DEBUG;
+import static com.amitinside.dependency.graph.osgi.cli.CliOptions.NAMESPACE;
+import static com.amitinside.dependency.graph.osgi.cli.CliOptions.NAMESPACE_CUSTOM;
+import static com.amitinside.dependency.graph.osgi.cli.CliOptions.OBR_FILE;
+import static com.amitinside.dependency.graph.osgi.cli.CliOptions.SHOW_EDGE;
+import static com.amitinside.dependency.graph.osgi.cli.Namespace.ALL;
+import static com.amitinside.dependency.graph.osgi.cli.Namespace.CUSTOM;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 import java.io.File;
@@ -32,12 +34,12 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.LoggerFactory;
 
+import com.amitinside.dependency.graph.osgi.GraphConfigurer;
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 import aQute.lib.io.IO;
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
 public final class Application {
@@ -45,7 +47,7 @@ public final class Application {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
     static {
-        logger.setLevel(Level.INFO);
+        logger.setLevel(INFO);
     }
 
     public static void main(final String... args) throws Exception {
@@ -63,7 +65,7 @@ public final class Application {
         options.addOption(OBR_FILE, true, "OBR Index File Location");
         options.addOption(BUNDLE_FILE, true, "Bundle List File Location");
         options.addOption(SHOW_EDGE, false, "Show Edge Labels");
-        options.addOption(DEBUG, false, "Turn on Debug Mode");
+        options.addOption(IS_DEBUG, false, "Turn on Debug Mode");
         options.addOption(CYCLE, false, "Check for Cycle Existence");
         final String description = "Namespace Type to Plot " + Lists.newArrayList(Namespace.values())
                 + " (Default ALL)";
@@ -87,7 +89,7 @@ public final class Application {
             if (line.hasOption(SHOW_EDGE)) {
                 showEdgeLabel = true;
             }
-            if (line.hasOption(DEBUG)) {
+            if (line.hasOption(IS_DEBUG)) {
                 isDebug = true;
             }
             if (line.hasOption(CYCLE)) {
@@ -136,10 +138,10 @@ public final class Application {
         config.customNamespace = customNamespace;
 
         if (isDebug) {
-            logger.setLevel(Level.DEBUG);
+            logger.setLevel(DEBUG);
         }
 
-        logger.debug("Cli Configuration => {} ", config);
+        logger.debug("CLI Configuration => {} ", config);
 
         final GraphConfigurer configurer = new GraphConfigurer(config);
         configurer.init();
