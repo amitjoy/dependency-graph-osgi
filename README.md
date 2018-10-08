@@ -77,7 +77,7 @@ usage: Dependency Graph in OSGi - Help
  -obr <arg>         OBR Index File Location
 ```
 
-#### Example Usage
+#### Example
 
 `java -jar dependency.graph.osgi.jar -obr index.xml -bundles bundles.txt -edge`
 
