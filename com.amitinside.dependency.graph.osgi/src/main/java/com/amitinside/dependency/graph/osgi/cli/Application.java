@@ -15,7 +15,6 @@ import static com.amitinside.dependency.graph.osgi.cli.CliOptions.BUNDLE_FILE;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.CYCLE;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.HELP_1;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.HELP_2;
-import static com.amitinside.dependency.graph.osgi.cli.CliOptions.HELP_3;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.IS_DEBUG;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.NAMESPACE;
 import static com.amitinside.dependency.graph.osgi.cli.CliOptions.NAMESPACE_CUSTOM;
@@ -67,7 +66,10 @@ public final class Application {
         String bundleListFile = null;
         try {
             final CommandLine line = parser.parse(options, args);
-            if (line.hasOption(HELP_2) || line.hasOption(HELP_1) || line.hasOption(HELP_3)) {
+            if (line.getOptions().length == 0) {
+                throw new ParseException("No Option Provided");
+            }
+            if (line.hasOption(HELP_1) || line.hasOption(HELP_2)) {
                 printHelp(options);
                 return;
             }

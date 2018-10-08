@@ -17,7 +17,6 @@ public final class CliOptions {
 
     public static final String HELP_1 = "?";
     public static final String HELP_2 = "help";
-    public static final String HELP_3 = "h";
     public static final String OBR_FILE = "obr";
     public static final String BUNDLE_FILE = "bundles";
     public static final String SHOW_EDGE = "edge";
