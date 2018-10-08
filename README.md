@@ -55,7 +55,7 @@ To use this application, you need an OBR (`OSGi Bundle Repository`) Index XML Fi
 #### Create Bundles List
 
 1. You need to have a file comprising the bundle symbolic names of the bundles whose dependencies will be plotted on the graph
-2. You can create a `bundles.txt` (or give it a name of your choice) with bundle symbolic names in separate lines. You can also use wildcards. For example, `com.google.*` will consider all the bundles whose symbolic names start with `com.google.`
+2. You can create a `bundles.txt` (or give it a name of your choice) with bundle symbolic names in separate lines. You can also use wildcards. For example, `com.google.*` will consider all the bundles whose symbolic names start with `com.google.` Apart from it, you can also use negations. For example, `!org.apache*` would remove all the bundles from the Graph whose symbolic names start with `org.apache`
 
 ####
 
