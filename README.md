@@ -50,12 +50,12 @@ To use this application, you need an OBR (`OSGi Bundle Repository`) Index XML Fi
 3. This assumes that all the target artifacts are kept in `target` directory in respective projects
 4. Alternatively, you can copy all your project JARs inside a separate directory
 5. Switch to this newly created directory in command line and execute `java -jar biz.aQute.bnd.jar index *.jar`
-6. Both the aforementioned commands will generate an OBR `index.xml`
+6. Both the aforementioned commands will generate OBR `index.xml` in the respective directories where the command is executed
 
 #### Create Bundles List
 
 1. You need to have a file comprising the bundle symbolic names of the bundles whose dependencies will be plotted on the graph
-2. You can create a `bundles.txt` (or give it a name of your choice) with bundle symbolic names in separate lines. You can also use wildcards. For example, `com.google.*` will consider all the bundles whose symbolic names start with `com.google.` Apart from it, you can also use negations. For example, `!org.apache*` would remove all the bundles from the Graph whose symbolic names start with `org.apache`
+2. You can create a `bundles.txt` (or give it a name of your choice) with bundle symbolic names in separate lines. You can also use wildcards. For example, `com.google.*` will consider all the bundles whose symbolic names start with `com.google.` Apart from it, you can also use negations. For example, `!org.apache*` would remove all the bundles from the Graph whose symbolic names start with `org.apache`.
 
 ####
 
@@ -79,7 +79,7 @@ usage: Dependency Graph in OSGi - Help
 
 #### Example
 
-`java -jar dependency.graph.osgi.jar -obr index.xml -bundles bundles.txt -edge`
+`java -jar dependency.graph.osgi.jar -obr index.xml -bundles bundles.txt -edge` - Plot the matched bundles from bundles.txt using the specified OBR index.xml with edge labels
 
 --------------------------------------------------------------------------------------------------------
 
