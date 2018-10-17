@@ -23,7 +23,7 @@ Want to contribute? Great! Check out [Contribution Guide](https://github.com/ami
 
 Import the project as an `Existing Maven Project` (`File -> Import -> Maven -> Existing Maven Projects`)
 
----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 
 #### Building from Source
 
