@@ -31,13 +31,13 @@ Import the project as an `Existing Maven Project` (`File -> Import -> Maven -> E
 2. This will build the project
 3. The target directory will contain `dependency.graph.osgi-0.0.1-SNAPSHOT-jar-with-dependencies.jar`
 
------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 ### License
 
 This project is licensed under EPL-2.0 [![License](http://img.shields.io/badge/license-EPL-blue.svg)](http://www.eclipse.org/legal/epl-2.0)
 
------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 ### Usage
 
