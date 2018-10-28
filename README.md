@@ -15,7 +15,7 @@ Java 8+
 
 Want to contribute? Great! Check out [Contribution Guide](https://github.com/amitjoy/dependency-graph-osgi/blob/master/CONTRIBUTING.md)
 
-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
 
 #### Project Import
 
@@ -23,7 +23,7 @@ Want to contribute? Great! Check out [Contribution Guide](https://github.com/ami
 
 Import the project as an `Existing Maven Project` (`File -> Import -> Maven -> Existing Maven Projects`)
 
--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
 
 #### Building from Source
 
@@ -31,7 +31,7 @@ Import the project as an `Existing Maven Project` (`File -> Import -> Maven -> E
 2. This will build the project
 3. The target directory will contain `dependency.graph.osgi-0.0.1-SNAPSHOT-jar-with-dependencies.jar`
 
--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
 
 ### License
 
