@@ -31,7 +31,7 @@ Import the project as an `Existing Maven Project` (`File -> Import -> Maven -> E
 2. This will build the project
 3. The target directory will contain `dependency.graph.osgi-0.0.1-SNAPSHOT-jar-with-dependencies.jar`
 
------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
 
 ### License
 
