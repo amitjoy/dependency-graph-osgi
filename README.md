@@ -15,7 +15,7 @@ Java 8+
 -
 Want to contribute? Great! Check out [Contribution Guide](https://github.com/amitjoy/dependency-graph-osgi/blob/master/CONTRIBUTING.md)
 
------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
 
 #### Project Import
 
