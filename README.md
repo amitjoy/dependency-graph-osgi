@@ -37,7 +37,7 @@ Import the project as an `Existing Maven Project` (`File -> Import -> Maven -> E
 
 This project is licensed under EPL-2.0 [![License](http://img.shields.io/badge/license-EPL-blue.svg)](http://www.eclipse.org/legal/epl-2.0)
 
-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
 
 ### Usage
 
