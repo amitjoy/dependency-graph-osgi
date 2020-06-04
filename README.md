@@ -45,7 +45,7 @@ To use this application, you need an OBR (`OSGi Bundle Repository`) Index XML Fi
 
 #### OBR Index Generation
 
-1. You need to download bnd from this [link](https://goo.gl/xoYH7J)
+1. You need to download bnd library from this [link](https://goo.gl/xoYH7J)
 2. Using terminal, switch to your workspace directory and execute - `java -jar biz.aQute.bnd.jar index */target/*.jar`
 3. This assumes that all the target artifacts are kept in `target` directory in the respective projects
 4. Alternatively, you can copy all your project JARs inside a separate directory
