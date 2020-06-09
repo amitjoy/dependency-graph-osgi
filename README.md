@@ -1,4 +1,4 @@
-<img width="303" alt="bildschirmfoto 2018-10-06 um 17 52 35" src="https://user-images.githubusercontent.com/13380182/46573106-a2498180-c990-11e8-8fc0-f1a09c8764c5.png">
+<img width="303" alt="logo" src="https://user-images.githubusercontent.com/13380182/46573106-a2498180-c990-11e8-8fc0-f1a09c8764c5.png">
 
 ## Why? [![start with what and why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)]()
 
@@ -44,7 +44,7 @@ To use this application, you need an OBR (`OSGi Bundle Repository`) Index XML Fi
 
 #### OBR Index Generation
 
-1. You need to download bnd library from this [link](https://goo.gl/xoYH7J)
+1. You need to download the bnd command line utility from https://search.maven.org/artifact/biz.aQute.bnd/biz.aQute.bnd
 2. Using terminal, switch to your workspace directory and execute - `java -jar biz.aQute.bnd.jar index */target/*.jar`
 3. This assumes that all the target artifacts are kept in `target` directory in the respective projects
 4. Alternatively, you can copy all your project JARs inside a separate directory
@@ -78,7 +78,7 @@ usage: Dependency Graph in OSGi - Help
 
 #### Example
 
-`java -jar dependency.graph.osgi.jar -obr index.xml -bundles bundles.txt -edge` - Plot the matched bundles from bundles.txt using the specified OBR index.xml with edge labels
+`java -jar dependency.graph.osgi-0.0.1-SNAPSHOT-jar-with-dependencies.jar -obr index.xml -bundles bundles.txt -edge` - Plot the matched bundles from bundles.txt using the specified OBR index.xml with edge labels
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -89,7 +89,7 @@ usage: Dependency Graph in OSGi - Help
 
 ------------------------------------------------------------------------------------------------------------
 
-<img width="1422" alt="bildschirmfoto 2018-10-06 um 16 19 07" src="https://user-images.githubusercontent.com/13380182/46572293-a8853100-c983-11e8-8537-4b0a77426c19.png">
+<img width="1422" alt="plotted graph example" src="https://user-images.githubusercontent.com/13380182/46572293-a8853100-c983-11e8-8537-4b0a77426c19.png">
 
 ------------------------------------------------------------------------------------------------------------
 
