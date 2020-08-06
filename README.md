@@ -80,7 +80,7 @@ usage: Dependency Graph in OSGi - Help
 
 `java -jar dependency.graph.osgi-0.0.1-SNAPSHOT-jar-with-dependencies.jar -obr index.xml -bundles bundles.txt -edge` - Plot the matched bundles from bundles.txt using the specified OBR index.xml with edge labels
 
--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
 
 ### Tools Used
 
