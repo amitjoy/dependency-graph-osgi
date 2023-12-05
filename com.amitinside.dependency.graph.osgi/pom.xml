@@ -26,7 +26,7 @@
 		<commons.lang.version>3.0</commons.lang.version>
 		<bnd.version>4.0.0</bnd.version>
 		<slf4j.version>1.6.4</slf4j.version>
-		<logback.version>1.2.0</logback.version>
+		<logback.version>1.2.13</logback.version>
 		<guava.version>23.0</guava.version>
 		<maven.assembly.plugin.version>3.1.0</maven.assembly.plugin.version>
 		<commons.cli.version>1.4</commons.cli.version>
